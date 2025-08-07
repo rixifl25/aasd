@@ -92,19 +92,26 @@ class HttpSessionRpa:
 
         self.clear_modal_validation_datos()
         
-        # Open mailbox
+        # Open target section (configurable)
         try:
-            x_bottom_buzon = self.config["XPATHS"]["x_bottom_buzon"]
+            target_section_xpath = self.config["XPATHS"].get("x_target_section", self.config["XPATHS"]["x_bottom_buzon"])
             workflow = [
-                {"action": "click", "by": By.XPATH, "value": x_bottom_buzon, "delay": 5},
+                {"action": "click", "by": By.XPATH, "value": target_section_xpath, "delay": 5},
             ]
             self._automator.execute_workflow("", workflow)
-            logger.info(f"Mailbox opened. RUC: {login_credentials['RUC']}")
+            logger.info(f"Target section opened. RUC: {login_credentials['RUC']}")
             # self.load_info_response()
         except Exception as e:
             self.close()
-            logger.error(f"Error opening mailbox: {e}")
+            logger.error(f"Error opening target section: {e}")
             raise
+
+    def open_target_section(self, login_credentials, wait_time=5):
+        """
+        Opens the configured target section after login.
+        This is a more generic version of open_mailbox that can navigate to any section.
+        """
+        return self.open_mailbox(login_credentials, wait_time)
 
     def close(self):
         """
@@ -119,7 +126,7 @@ class HttpSessionRpa:
             {"action": "click", "by": By.XPATH, "value": x_bottom_salir, "delay": 5},
         ]
         self._automator.execute_workflow("", workflow)
-        logger.info(f"Mailbox closed.")
+        logger.info(f"Session closed.")
 
 
 if __name__ == "__main__":

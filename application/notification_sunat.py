@@ -28,7 +28,7 @@ class NotificationSunat():
         logger.info(f"RUC values: {json.dumps([context['RUC'] for context in companies], indent=4)}")
         for context in companies:
             logger.info(f"Credencial RUC: {context["RUC"]}")
-            self.session.open_mailbox(context)
+            self.session.open_target_section(context)
             notifications = self.extractor.extract(self.session, 
                                                    { 
                                                        "estudio_contable_ruc": self.settings.ESTUDIO_CONTABLE_RUC,
